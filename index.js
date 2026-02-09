@@ -21,7 +21,7 @@ app.post("/ask", async (req, res) => {
       },
       {
         params: {
-          key: AIzaSyBWbmYbYgfRt4303jaRyVe8cG7bj28_cdM
+          key: "AIzaSyBWbmYbYgfRt4303jaRyVe8cG7bj28_cdM"
         }
       }
     );

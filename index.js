@@ -1,45 +1,36 @@
 import express from "express";
-import axios from "axios";
 import cors from "cors";
+import axios from "axios";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("AI LIVE HAI 🚀");
-});
-
 app.post("/ask", async (req, res) => {
   try {
-    const prompt = req.body.prompt;
-
-    if (!prompt) {
-      return res.status(400).json({ error: "prompt missing" });
-    }
+    const { prompt } = req.body;
 
     const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=AIzaSyBWbmYbYgfRt4303jaRyVe8cG7bj28_cdM`,
+      "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent",
       {
         contents: [
           {
-            role: "user",
             parts: [{ text: prompt }]
           }
         ]
       },
       {
-        headers: {
-          "Content-Type": "application/json"
+        params: {
+          key: AIzaSyBWbmYbYgfRt4303jaRyVe8cG7bj28_cdM
         }
       }
     );
 
     const reply =
-      response.data.candidates?.[0]?.content?.parts?.[0]?.text;
+      response.data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "No response";
 
     res.json({ reply });
-
   } catch (err) {
     res.status(500).json({
       error: "AI error",
@@ -48,7 +39,11 @@ app.post("/ask", async (req, res) => {
   }
 });
 
+app.get("/", (req, res) => {
+  res.send("AI API is running 🚀");
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log("Server running on", PORT);
+  console.log("Server running on port", PORT);
 });
